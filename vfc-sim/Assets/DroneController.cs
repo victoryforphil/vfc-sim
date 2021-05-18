@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
@@ -10,7 +11,7 @@ public class DroneController : MonoBehaviour
 {
     private Rigidbody mRigidbody;
 
-    public double THRUST_SCALER = 5.0;
+    public float THRUST_SCALER = 5.0f;
     
     public Transform[] mMotorPositions;
     // Start is called before the first frame update
@@ -29,10 +30,16 @@ public class DroneController : MonoBehaviour
     {
         for(int i=0;i<mMotorPositions.Length;i++)
         {
-            Vector3 _forceVector = new Vector3( 0,(float)(motors[i] * THRUST_SCALER), 0);
+            float val = (float)motors[i];
+            val = Math.Max(0, val);
+            
+            Vector3 _forceVector = new Vector3( 0,val * THRUST_SCALER, 0);
 
-
+            mMotorPositions[i].localScale = new Vector3(0.2f,(val/4),0.2f);
             mRigidbody.AddForceAtPosition(mMotorPositions[i].TransformDirection(_forceVector)  , mMotorPositions[i].position);
+            
+            
+            
         }
     }
 }
